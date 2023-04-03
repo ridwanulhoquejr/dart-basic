@@ -1,139 +1,166 @@
-import 'package:dart_application_1/dart_application_1.dart'
-    as dart_application_1;
-
 void main(List<String> arguments) {
-  print('Hello world: ${dart_application_1.calculate()}!');
+// ----------------- Closuer ----------------- //
 
-  print('My Name is : Ridwanul Haque');
+  // closure
+  // closure is a function that has access to the parent scope, even after the scope has closed
 
-  // dart list
-  List<int> list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  // example
+  var car = makeCar("BMW"); // this will return a function
+  print(car("M3")); // this is closure parameter
+  print(car(null)); // this is closure parameter
 
-  // list methods
+  var car1 = makeCar();
+  print(car1('m4')); // this will return a function
 
-  // add
-  list.add(11);
-  print(list);
+  // call the interface class by creating an object
+  UserRepository userRepo = UserRepository();
+  userRepo.update();
+  userRepo.anotherMethod();
 
-  // addAll
-  list.addAll([12, 13, 14, 15]);
-  print(list);
+  // call the mixin class by creating an object
 
-  // insert
-  list.insert(0, 0);
-  print(list);
+  AllAnimal allAnimal = AllAnimal();
+  allAnimal.eat();
+  allAnimal.flutter();
+  allAnimal.walk();
 
-  // fold
-  var sum = list.fold(0, (previous, element) => previous + element);
-  // explanation
-  // 0 is the initial value
-  // previous is the previous value
-  // element is the current value
+  // call the extension
 
-  // what is fold?
-  // fold is a method that takes a list and reduces it to a single value
+  print('adding with extension: ${1.add10()}');
+  print('random number with extension: ${'random'.randomNumber}');
+}
 
-  // so, do reduce and fold are the same?
-  // yes, they are the same
+// closure
+String Function(String?) makeCar([String? make]) {
+  // optional parameter
+  // this makeCar function will return a function that takes a string as a parameter
+  var engine = "V8";
+  return (model) => "$make $model $engine";
+}
 
-  print(sum);
+// ----------------- Interfaces ----------------- //
+abstract class UserRepositorInterface {
+// this is a interface
+// means that this class can only be extended
+// and not instantiated
+// this is more like a contract, where the abstract methods must be implemented
 
-  // where
-  // declarative way of doing the same thing
-  print(list.where((element) => element % 2 == 0).toList());
+// this is more like pydantic Base Model
+  void save(); // this is a abstract method
+  void delete();
+  void update();
+  void find();
+}
 
-  // imperative way of doing the same thing
-  List<int> evenList = [];
-  for (var i = 0; i < list.length; i++) {
-    if (list[i] % 2 == 0) {
-      evenList.add(list[i]);
-    }
+// another interface
+abstract class AnotherInterface {
+  void anotherMethod() {}
+}
+
+class UserRepository implements UserRepositorInterface, AnotherInterface {
+  // in this class we are implementing the abstract methods
+  // so we have to have overriding all the behaviors of the interface, no other option
+  @override
+  void delete() {
+    // TODO: implement delete
   }
 
-  // spread operator
-  // spread operator is used to spread the elements of a list
-  // into another list
-  List<int> list2 = [11, 12, 13, 14, 15];
-
-  print([...list, ...list2]);
-
-  // null aware acces operator
-  int? a;
-  a = null;
-
-  print(a
-      ?.isEven); // this will not throw an error, just return null when the variable is null
-  // print(a!.isEven); // this will throw an error when the variable is null
-
-  // so we use !. when we are 100% sure that the variable is not null
-
-  // spread operator for sorting a list
-  List<int> list3 = [99, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  print([...list3]..sort());
-
-  // spread operator null aware
-  List<int?>? list4 = [21, 11, null];
-
-  print([list3, ...?list4]); // this will not throw an error
-  // ..? only add the list if it is not null
-
-  // we can also use list initialization with condition
-  bool isAdd = true;
-  List<int> conditionalList = [
-    99,
-    100,
-    101,
-    if (isAdd) 102,
-  ];
-  print("The 102 is added because isAdd is -> True $conditionalList");
-
-  // Function
-  var add = additon; // additon will reference to the additon function
-
-  // call the second function, which takes a function as a parameter and two parameters
-  // so we can pass the additon function referes -> add as a parameter
-  second(add, 10, 20);
-
-  // annonymous function
-  List<String> names = [
-    'Ridwanul',
-    'Haque',
-  ];
-
-  // lets say we want to upperCase all the names in the list, in this case we can use map and annonymous function
-  List<String> upperCaseNames =
-      names.map((String name) => name.toUpperCase()).toList();
-
-  print(upperCaseNames);
-
-  // call class A:
-  A()();
-  // or we can do this
-  var objectA = A();
-  objectA();
-
-  // ~/ is the integer division operator
-  // it will return the integer value of the division
-  print(10 ~/ 3);
-
-  // % is the modulus operator
-  // it will return the remainder of the division
-  print(10 % 3);
-}
-
-void second(int Function(int, int) f, int a, int b) {
-  print(f(a, b));
-}
-
-int additon(int a, int b) {
-  return a + b;
-}
-
-// callable class
-class A {
-  // this is called a callable class
-  // if we create a class and we want to call it like a function
-  void call() {
-    print("I am called");
+  @override
+  void find() {
+    // TODO: implement find
   }
+
+  @override
+  void save() {
+    // TODO: implement save
+  }
+
+  @override
+  void update() {
+    // TODO: implement update
+    print('I am in update method');
+  }
+
+  @override
+  void anotherMethod() {
+    // TODO: implement anotherMethod
+    print('I am in another interface');
+  }
+}
+
+// ----------------- Mixins ----------------- //
+
+class Animal {
+  // Mixins are like a interface, but it can be used with multiple inheritance
+  // but dont have to implement all the methods and properties unlike interfaces
+
+  void eat() {
+    print('All Animals are eating');
+  }
+
+  void sleep() {
+    print('All Animals are sleeping');
+  }
+}
+
+mixin Bird {
+  void flutter() {
+    print('Bird can fluttering');
+  }
+
+  void fly() {
+    print('Bird can fly');
+  }
+}
+
+mixin Fish {
+  void swim() {
+    print('Fish can swim');
+  }
+}
+
+mixin Human {
+  void walk() {
+    print('Human can walk');
+  }
+}
+
+mixin Mammal {
+  void walk() {
+    print('Mammal can run');
+  }
+}
+
+class AllAnimal extends Animal with Bird, Fish, Mammal, Human {
+  // if there are any DDD conflicts, then the last one will be used
+  // in this case, the Human class will be used
+  // because it is closest to the AllAnimal class
+
+  /* 
+    Animal is the super class of AllAnimal, hence it will be top of the herarchy. Also the  mixin class will be at the bottom of the herarchy
+    but as a properties of super class.
+
+    So, the herarchy will be like this:
+    1. Animal
+    2. Bird
+    3. Fish
+    4. Mammal
+    5. Human
+    6. AllAnimal
+
+    so, if any DDD conflicts, then the last one will be used because it is closest to the AllAnimal class
+
+  */
+}
+
+// ----------------- Extension ----------------- //
+
+extension IntegerExtension on int {
+  int add10() => this + 10;
+  // this refers to the `int` which is the receiver of the extension
+  // 5.add10() => 5 + 10 => 15  // here 5 is the `this`
+}
+
+extension RandomX on String {
+  int get randomNumber => 47;
 }
