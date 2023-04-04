@@ -1,166 +1,63 @@
 void main(List<String> arguments) {
-// ----------------- Closuer ----------------- //
+  // ----------- Generics naming convention ----------- //
 
-  // closure
-  // closure is a function that has access to the parent scope, even after the scope has closed
+  // <E> -> Element, usually used for collections
+  // <K, V> -> Key, Value, usually used for maps
+  // <T> -> Type, usually used for type arguments
+  // <S> -> Source, usually used for streams
 
-  // example
-  var car = makeCar("BMW"); // this will return a function
-  print(car("M3")); // this is closure parameter
-  print(car(null)); // this is closure parameter
+  final double doubleValue = eitherIntOrDouble(); // call side defines the type
+  print(doubleValue);
 
-  var car1 = makeCar();
-  print(car1('m4')); // this will return a function
+  final int intValue = eitherIntOrDouble(); // call side defines the type
+  print(intValue);
 
-  // call the interface class by creating an object
-  UserRepository userRepo = UserRepository();
-  userRepo.update();
-  userRepo.anotherMethod();
+  // example 2: Type matching
+  print(doTypeMatch(1, 1.1));
+  print(doTypeMatch(1, 1));
+  print(doTypeMatch(1, 'Hello '));
 
-  // call the mixin class by creating an object
+  // example 3: Exisiting data types to generic types
+  const JSON<String> json = {
+    // this is call side type definition -> <String>, here we are saying that the value of the map is a string
+    // which is generic type of <T> in the typedef
+    // so basically, whatever type we define here, will be the type of the value of the map <T>
+    'name': 'Ridwan',
+    'address': 'Katalganj',
+  };
 
-  AllAnimal allAnimal = AllAnimal();
-  allAnimal.eat();
-  allAnimal.flutter();
-  allAnimal.walk();
-
-  // call the extension
-
-  print('adding with extension: ${1.add10()}');
-  print('random number with extension: ${'random'.randomNumber}');
+  // example 4: Generic method
+  final List<int> list = <int>[1, 2, 3, 4, 5];
+  final List<String> list1 = <String>['h', 'j'];
+  print(Utils.getItem(list, 0));
+  print(Utils.getItem(list1, 0));
 }
 
-// closure
-String Function(String?) makeCar([String? make]) {
-  // optional parameter
-  // this makeCar function will return a function that takes a string as a parameter
-  var engine = "V8";
-  return (model) => "$make $model $engine";
-}
-
-// ----------------- Interfaces ----------------- //
-abstract class UserRepositorInterface {
-// this is a interface
-// means that this class can only be extended
-// and not instantiated
-// this is more like a contract, where the abstract methods must be implemented
-
-// this is more like pydantic Base Model
-  void save(); // this is a abstract method
-  void delete();
-  void update();
-  void find();
-}
-
-// another interface
-abstract class AnotherInterface {
-  void anotherMethod() {}
-}
-
-class UserRepository implements UserRepositorInterface, AnotherInterface {
-  // in this class we are implementing the abstract methods
-  // so we have to have overriding all the behaviors of the interface, no other option
-  @override
-  void delete() {
-    // TODO: implement delete
-  }
-
-  @override
-  void find() {
-    // TODO: implement find
-  }
-
-  @override
-  void save() {
-    // TODO: implement save
-  }
-
-  @override
-  void update() {
-    // TODO: implement update
-    print('I am in update method');
-  }
-
-  @override
-  void anotherMethod() {
-    // TODO: implement anotherMethod
-    print('I am in another interface');
+// example 1:
+// create a function that returns a int or double
+T eitherIntOrDouble<T extends num>() {
+  switch (T) {
+    case int:
+      return 1 as T;
+    case double:
+      return 1.0 as T;
+    default:
+      throw Exception('Not a valid type');
   }
 }
 
-// ----------------- Mixins ----------------- //
+// example 2: Type matching
+bool doTypeMatch<L, R>(L a, R b) => a == b;
 
-class Animal {
-  // Mixins are like a interface, but it can be used with multiple inheritance
-  // but dont have to implement all the methods and properties unlike interfaces
+// example 3: Exisiting data types to generic types
+// We enforce all the
+typedef JSON<V> = Map<String, V>;
 
-  void eat() {
-    print('All Animals are eating');
-  }
-
-  void sleep() {
-    print('All Animals are sleeping');
-  }
-}
-
-mixin Bird {
-  void flutter() {
-    print('Bird can fluttering');
-  }
-
-  void fly() {
-    print('Bird can fly');
-  }
-}
-
-mixin Fish {
-  void swim() {
-    print('Fish can swim');
-  }
-}
-
-mixin Human {
-  void walk() {
-    print('Human can walk');
-  }
-}
-
-mixin Mammal {
-  void walk() {
-    print('Mammal can run');
-  }
-}
-
-class AllAnimal extends Animal with Bird, Fish, Mammal, Human {
-  // if there are any DDD conflicts, then the last one will be used
-  // in this case, the Human class will be used
-  // because it is closest to the AllAnimal class
-
-  /* 
-    Animal is the super class of AllAnimal, hence it will be top of the herarchy. Also the  mixin class will be at the bottom of the herarchy
-    but as a properties of super class.
-
-    So, the herarchy will be like this:
-    1. Animal
-    2. Bird
-    3. Fish
-    4. Mammal
-    5. Human
-    6. AllAnimal
-
-    so, if any DDD conflicts, then the last one will be used because it is closest to the AllAnimal class
-
-  */
-}
-
-// ----------------- Extension ----------------- //
-
-extension IntegerExtension on int {
-  int add10() => this + 10;
-  // this refers to the `int` which is the receiver of the extension
-  // 5.add10() => 5 + 10 => 15  // here 5 is the `this`
-}
-
-extension RandomX on String {
-  int get randomNumber => 47;
+// example 4: Generic method
+class Utils {
+  // in this case, we can pass any type of list and we can get the item from the list
+  // this is called generic type means, it will applicable for any type of list
+  // keep in mind, we have to declare <T>  type after the method name, otherwise it will not recognise the return type T
+  static T? getItem<T>(List<T> list, int index) =>
+      list.asMap().containsKey(index) ? list[index] : null;
 }
