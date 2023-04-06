@@ -31,6 +31,26 @@ void main(List<String> arguments) {
   final List<String> list1 = <String>['h', 'j'];
   print(Utils.getItem(list, 0));
   print(Utils.getItem(list1, 0));
+
+  // stack implementation
+  final Stack<int> intStack = Stack<int>(); // call side defines the type
+
+  intStack.push(1);
+  intStack.push(2);
+  intStack.push(3);
+  intStack.push(4);
+  intStack.push(1);
+  intStack.canPop ? intStack.pop() : print('Stack is empty');
+  print(intStack.printStack());
+
+  // string stack
+  final Stack<String> stringStack = Stack<String>();
+
+  stringStack.push('Hello');
+  stringStack.push('World');
+  stringStack.push('!');
+  stringStack.canPop ? stringStack.pop() : print('Stack is empty');
+  print(stringStack.printStack());
 }
 
 // example 1:
@@ -60,4 +80,40 @@ class Utils {
   // keep in mind, we have to declare <T>  type after the method name, otherwise it will not recognise the return type T
   static T? getItem<T>(List<T> list, int index) =>
       list.asMap().containsKey(index) ? list[index] : null;
+}
+
+// implementing stack using generics
+
+class Stack<T> {
+  final List<T> _stack = <T>[];
+
+  // in stack we have two operations:
+  // 1. push
+  // 2. pop
+
+  // if the stack is empty, then we are able to pop
+  bool get canPop => _stack.isNotEmpty;
+  int get length => _stack.length;
+
+  void push(T item) {
+    // implement the item if it is not already in the stack
+    if (!_stack.contains(item)) {
+      _stack.add(item);
+    } else {
+      print(
+          'Duplicate item cannot be pushed in the stack, the item: $item is already exist in the stack');
+    }
+  }
+
+  T pop() {
+    // first we
+    final T last = _stack.last;
+    print('the last item is popped: $last');
+    _stack.removeLast();
+    return last;
+  }
+
+  printStack() {
+    print(_stack);
+  }
 }
